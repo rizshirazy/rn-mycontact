@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -8,24 +8,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { IconPencil } from '../../../assets';
 import { ContactItem } from '../../../components';
 import { baseUrl } from '../../../config';
 import { colors, sortArray } from '../../../utils';
 
 const ContactList = ({ navigation }) => {
-  const [contacts, setContacts] = useState([]);
+  const contacts = useSelector((state) => state.contacts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchAllContacts();
-  }, []);
+  });
 
   const fetchAllContacts = () => {
     Axios.get(baseUrl)
       .then((res) => {
         const response = res.data.data;
         const sortedResponse = sortArray(response);
-        setContacts(sortedResponse);
+        dispatch({ type: 'SET_CONTACTS', payload: sortedResponse });
       })
       .catch((err) => console.log(err));
   };
@@ -47,7 +49,9 @@ const ContactList = ({ navigation }) => {
         </ScrollView>
       </View>
       <View style={styles.buttonWrapper}>
-        <TouchableOpacity style={styles.floatingButton}>
+        <TouchableOpacity
+          style={styles.floatingButton}
+          onPress={() => navigation.navigate('NewContact')}>
           <IconPencil width={28} height={28} />
         </TouchableOpacity>
       </View>

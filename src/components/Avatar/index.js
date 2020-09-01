@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconUser } from '../../assets';
@@ -19,3 +20,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+Avatar.propTypes = {
+  size: PropTypes.number,
+};

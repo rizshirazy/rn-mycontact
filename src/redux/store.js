@@ -1,9 +1,20 @@
 const { createStore } = require('redux');
 
-const initialState = {};
+const initialState = {
+  contacts: [],
+};
 
 const reducer = (state = initialState, action) => {
-  return state;
+  switch (action.type) {
+    case 'SET_CONTACTS':
+      return {
+        ...state,
+        contacts: action.payload,
+      };
+
+    default:
+      return state;
+  }
 };
 
 const store = createStore(reducer);
