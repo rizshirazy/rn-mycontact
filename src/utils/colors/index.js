@@ -30,4 +30,8 @@ export const colors = {
       text: mainColors.grey2,
     },
   },
+  background: {
+    primary: mainColors.white,
+  },
+  border: mainColors.grey3,
 };

@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Splash = () => {
+const Splash = ({ navigation }) => {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.replace('ContactList');
+    }, 1500);
+  });
+
   return (
     <View style={styles.page}>
       <Text style={styles.title}>My Contact</Text>
