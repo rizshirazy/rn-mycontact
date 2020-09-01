@@ -1,11 +1,19 @@
 import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { IconPencil } from '../../../assets';
 import { ContactItem } from '../../../components';
+import { baseUrl } from '../../../config';
 import { colors, sortArray } from '../../../utils';
 
-const ContactList = () => {
-  const url = 'https://simple-contact-crud.herokuapp.com/contact';
+const ContactList = ({ navigation }) => {
   const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
@@ -13,7 +21,7 @@ const ContactList = () => {
   }, []);
 
   const fetchAllContacts = () => {
-    Axios.get(url)
+    Axios.get(baseUrl)
       .then((res) => {
         const response = res.data.data;
         const sortedResponse = sortArray(response);
@@ -38,6 +46,11 @@ const ContactList = () => {
           ))}
         </ScrollView>
       </View>
+      <View style={styles.buttonWrapper}>
+        <TouchableOpacity style={styles.floatingButton}>
+          <IconPencil width={28} height={28} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -48,6 +61,7 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor: colors.background.primary,
+    position: 'relative',
   },
   title: {
     fontSize: 28,
@@ -61,5 +75,26 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+  },
+  buttonWrapper: {
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
+  },
+  floatingButton: {
+    backgroundColor: colors.primary,
+    width: 55,
+    height: 55,
+    borderRadius: 55 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });

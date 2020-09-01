@@ -2,20 +2,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconNext } from '../../assets';
-import { colors } from '../../utils';
+import { colors, isValidUrl } from '../../utils';
+import Avatar from '../Avatar';
 
 const ContactItem = ({ id, firstName, lastName, photo, navigation }) => {
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.avatarWrapper}>
-        <Image source={{ uri: photo }} style={styles.avatar} />
+        {isValidUrl(photo) ? (
+          <Image source={{ uri: photo }} style={styles.avatar} />
+        ) : (
+          <Avatar />
+        )}
       </View>
       <View style={styles.mainWrapper}>
         <Text style={styles.firstName}>{firstName}</Text>
         <Text style={styles.lastName}>{lastName}</Text>
       </View>
       <View style={styles.iconWrapper}>
-        <IconNext />
+        <IconNext width={17} height={17} />
       </View>
     </TouchableOpacity>
   );
@@ -32,6 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   avatarWrapper: {
+    width: 50,
     marginRight: 15,
   },
   avatar: {
