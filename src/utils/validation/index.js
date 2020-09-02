@@ -1,4 +1,39 @@
+import validator from 'validator';
+
 export const isValidUrl = (url) => {
-  const regex = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
-  return regex.test(url);
+  return validator.isURL(url);
+};
+
+export const isValidFirstName = (text) => {
+  if (validator.isEmpty(text)) {
+    return 'required';
+  } else if (!validator.isLength(text, { min: 3 })) {
+    return 'minimum 3 characters';
+  } else {
+    return null;
+  }
+};
+
+export const isValidLastName = (text) => {
+  if (validator.isEmpty(text)) {
+    return 'required';
+  } else if (!validator.isLength(text, { min: 3 })) {
+    return 'minimum 3 characters';
+  } else {
+    return null;
+  }
+};
+
+export const isValidAge = (text) => {
+  if (validator.isEmpty(text)) {
+    return 'required';
+  } else if (!validator.isInt(text)) {
+    return 'age must be muneric';
+  } else if (!validator.isInt(text, { min: 1 })) {
+    return 'age must be larger than or equal to 1 year';
+  } else if (!validator.isInt(text, { max: 200 })) {
+    return 'age must be less than or equal to 200';
+  } else {
+    return null;
+  }
 };

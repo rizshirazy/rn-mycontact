@@ -3,7 +3,14 @@ import React, { Component } from 'react';
 import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { Avatar, Button, Input } from '../../../components';
 import { baseUrl } from '../../../config';
-import { colors, showError, showSuccess } from '../../../utils';
+import {
+  colors,
+  isValidAge,
+  isValidFirstName,
+  isValidLastName,
+  showError,
+  showSuccess,
+} from '../../../utils';
 
 class NewContact extends Component {
   constructor(props) {
@@ -12,6 +19,11 @@ class NewContact extends Component {
       firstName: '',
       lastName: '',
       age: '',
+      validation: {
+        firstName: null,
+        lastName: null,
+        age: null,
+      },
     };
   }
 
@@ -19,31 +31,76 @@ class NewContact extends Component {
     this.setState({ [field]: value });
   };
 
-  createContact = () => {
-    const data = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      age: this.state.age,
-    };
+  filterValidation = (obj) => {
+    var propNames = Object.getOwnPropertyNames(obj);
+    for (var i = 0; i < propNames.length; i++) {
+      var propName = propNames[i];
+      if (obj[propName] === null || obj[propName] === undefined) {
+        delete obj[propName];
+      }
+    }
+  };
 
-    Axios.post(baseUrl, data)
-      .then((res) => {
-        showSuccess(res.data.message);
-        this.props.navigation.navigate('ContactList');
-      })
-      .catch((err) => {
-        if (err.status === 500) {
-          showError('Internal Error');
-        } else if (err.status === 400) {
-          showError('Bad Request');
-        } else {
-          showError('Failed process your request');
-        }
-      });
+  createContact = () => {
+    this.firstNameValidator(this.state.firstName);
+    this.lastNameValidator(this.state.lastName);
+    this.ageValidator(this.state.age);
+
+    setTimeout(() => {
+      const validation = this.state.validation;
+      console.log(validation);
+      this.filterValidation(validation);
+      if (Object.keys(validation).length) return;
+
+      const data = {
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        age: this.state.age,
+      };
+
+      Axios.post(baseUrl, data)
+        .then((res) => {
+          showSuccess(res.data.message);
+          this.props.navigation.navigate('ContactList');
+        })
+        .catch((err) => {
+          if (err.status === 500) {
+            showError('Internal Error');
+          } else if (err.status === 400) {
+            showError('Bad Request');
+          } else {
+            showError('Failed process your request');
+          }
+        });
+    }, 500);
+  };
+
+  firstNameValidator = (value) => {
+    const result = isValidFirstName(value);
+    this.setState({
+      firstName: value,
+      validation: { ...this.state.validation, firstName: result },
+    });
+  };
+
+  lastNameValidator = (value) => {
+    const result = isValidLastName(value);
+    this.setState({
+      lastName: value,
+      validation: { ...this.state.validation, lastName: result },
+    });
+  };
+
+  ageValidator = (value) => {
+    const result = isValidAge(value);
+    this.setState({
+      age: value,
+      validation: { ...this.state.validation, age: result },
+    });
   };
 
   render() {
-    const { firstName, lastName, age } = this.state;
+    const { firstName, lastName, age, validation } = this.state;
     return (
       <ScrollView style={styles.page} showsVerticalScrollIndicator={false}>
         <StatusBar
@@ -60,17 +117,20 @@ class NewContact extends Component {
           <Input
             label="First Name"
             value={firstName}
-            onChangeText={(value) => this.onChangeValue('firstName', value)}
+            onChangeText={(value) => this.firstNameValidator(value)}
+            error={validation.firstName}
           />
           <Input
             label="Last Name"
             value={lastName}
-            onChangeText={(value) => this.onChangeValue('lastName', value)}
+            onChangeText={(value) => this.lastNameValidator(value)}
+            error={validation.lastName}
           />
           <Input
             label="Age"
             value={age}
-            onChangeText={(value) => this.onChangeValue('age', value)}
+            onChangeText={(value) => this.ageValidator(value)}
+            error={validation.age}
           />
           <View>
             <Button title="Save" onPress={this.createContact} />

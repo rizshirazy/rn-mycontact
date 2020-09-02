@@ -14,6 +14,7 @@ export const colors = {
   primary: mainColors.green1,
   secondary: mainColors.dark1,
   disable: mainColors.grey3,
+  error: mainColors.red1,
   white: mainColors.white,
   black: mainColors.black,
   text: {
