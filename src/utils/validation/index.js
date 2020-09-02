@@ -37,3 +37,10 @@ export const isValidAge = (text) => {
     return null;
   }
 };
+
+export const isValidImageUri = (text) => {
+  if (validator.isURL(text) || validator.isBase64(text, { urlSafe: true })) {
+    return true;
+  }
+  return false;
+};

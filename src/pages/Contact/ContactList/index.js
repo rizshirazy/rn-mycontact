@@ -44,7 +44,13 @@ const ContactList = ({ navigation }) => {
       <View style={styles.content}>
         <ScrollView showsVerticalScrollIndicator={false}>
           {contacts.map((contact) => (
-            <ContactItem key={contact.id} {...contact} />
+            <ContactItem
+              key={contact.id}
+              {...contact}
+              onPress={() =>
+                navigation.navigate('ContactDetail', { ...contact })
+              }
+            />
           ))}
         </ScrollView>
       </View>

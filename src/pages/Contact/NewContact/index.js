@@ -42,37 +42,42 @@ class NewContact extends Component {
   };
 
   createContact = () => {
-    this.firstNameValidator(this.state.firstName);
-    this.lastNameValidator(this.state.lastName);
-    this.ageValidator(this.state.age);
+    const { firstName, lastName, age, id } = this.state;
 
-    setTimeout(() => {
-      const validation = this.state.validation;
-      console.log(validation);
-      this.filterValidation(validation);
-      if (Object.keys(validation).length) return;
+    const validFirstName = isValidFirstName(firstName);
+    const validLastName = isValidLastName(lastName);
+    const validAge = isValidAge(age);
 
-      const data = {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        age: this.state.age,
-      };
+    const validation = {
+      firstName: validFirstName,
+      lastName: validLastName,
+      age: validAge,
+    };
 
-      Axios.post(baseUrl, data)
-        .then((res) => {
-          showSuccess(res.data.message);
-          this.props.navigation.navigate('ContactList');
-        })
-        .catch((err) => {
-          if (err.status === 500) {
-            showError('Internal Error');
-          } else if (err.status === 400) {
-            showError('Bad Request');
-          } else {
-            showError('Failed process your request');
-          }
-        });
-    }, 500);
+    this.setState({ validation });
+    this.filterValidation(validation);
+    if (Object.keys(validation).length) return;
+
+    const data = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      age: this.state.age,
+    };
+
+    Axios.put(baseUrl + '/' + id, data)
+      .then((res) => {
+        showSuccess(res.data.message);
+        this.props.navigation.navigate('ContactList');
+      })
+      .catch((err) => {
+        if (err.status === 500) {
+          showError('Internal Error');
+        } else if (err.status === 400) {
+          showError('Bad Request');
+        } else {
+          showError('Failed process your request');
+        }
+      });
   };
 
   firstNameValidator = (value) => {

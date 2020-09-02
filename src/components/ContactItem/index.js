@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Avatar } from '..';
 import { IconNext } from '../../assets';
 import { colors, isValidUrl } from '../../utils';
-import Avatar from '../Avatar';
 
-const ContactItem = ({ id, firstName, lastName, photo, navigation }) => {
+const ContactItem = ({ id, firstName, lastName, photo, onPress }) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.avatarWrapper}>
         {isValidUrl(photo) ? (
           <Image source={{ uri: photo }} style={styles.avatar} />
