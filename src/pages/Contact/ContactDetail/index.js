@@ -1,15 +1,23 @@
 import Axios from 'axios';
 import React, { Component } from 'react';
-import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import ImagePicker from 'react-native-image-picker';
 import { Avatar, Button, Input } from '../../../components';
 import { baseUrl } from '../../../config';
 import {
   colors,
   isValidAge,
   isValidFirstName,
+  isValidImageUri,
   isValidLastName,
-  isValidUrl,
   showError,
   showSuccess,
 } from '../../../utils';
@@ -45,8 +53,26 @@ class ContactDetail extends Component {
     }
   };
 
-  createContact = () => {
-    const { firstName, lastName, age, id } = this.state;
+  getImage = () => {
+    ImagePicker.launchImageLibrary(
+      {
+        quality: 0.2,
+        maxWidth: 200,
+        maxHeight: 200,
+      },
+      (response) => {
+        if (response.didCancel || response.error) {
+          showError('Ooops, no photo has been selected!');
+        } else {
+          const photoBase64 = `data:${response.type};base64, ${response.data}`;
+          this.setState({ photo: photoBase64 });
+        }
+      },
+    );
+  };
+
+  updateContact = () => {
+    const { firstName, lastName, age, id, photo } = this.state;
 
     const validFirstName = isValidFirstName(firstName);
     const validLastName = isValidLastName(lastName);
@@ -65,6 +91,7 @@ class ContactDetail extends Component {
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       age: this.state.age,
+      photo: this.state.photo,
     };
 
     Axios.put(baseUrl + '/' + id, data)
@@ -120,13 +147,15 @@ class ContactDetail extends Component {
         </View>
         <View style={styles.content}>
           <View style={styles.avatarWrapper}>
-            {isValidUrl(photo) ? (
-              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{ justifyContent: 'center', alignItems: 'center' }}
+              onPress={this.getImage}>
+              {isValidImageUri(photo) ? (
                 <Image source={{ uri: photo }} style={styles.avatar} />
-              </View>
-            ) : (
-              <Avatar size={60} photo={photo} />
-            )}
+              ) : (
+                <Avatar size={60} photo={photo} />
+              )}
+            </TouchableOpacity>
           </View>
           <Input
             label="First Name"
@@ -147,7 +176,7 @@ class ContactDetail extends Component {
             error={validation.age}
           />
           <View>
-            <Button title="Save" onPress={this.createContact} />
+            <Button title="Save" onPress={this.updateContact} />
           </View>
         </View>
       </ScrollView>

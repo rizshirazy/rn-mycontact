@@ -64,7 +64,7 @@ class NewContact extends Component {
       age: this.state.age,
     };
 
-    Axios.put(baseUrl + '/' + id, data)
+    Axios.post(baseUrl, data)
       .then((res) => {
         showSuccess(res.data.message);
         this.props.navigation.navigate('ContactList');

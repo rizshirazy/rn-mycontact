@@ -39,7 +39,8 @@ export const isValidAge = (text) => {
 };
 
 export const isValidImageUri = (text) => {
-  if (validator.isURL(text) || validator.isBase64(text, { urlSafe: true })) {
+  const regex = /data:image\/([a-zA-Z]*);base64,([^\"]*)/;
+  if (validator.isURL(text) || regex.test(text)) {
     return true;
   }
   return false;
