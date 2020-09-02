@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../utils';
 
-const Button = ({ title, onPress, disabled }) => {
+const Button = ({ title, onPress, disabled, type }) => {
   if (disabled) {
     return (
       <View style={styles.disableBg}>
@@ -12,8 +12,8 @@ const Button = ({ title, onPress, disabled }) => {
   }
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+    <TouchableOpacity style={styles.container(type)} onPress={onPress}>
+      <Text style={styles.text(type)}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -21,16 +21,22 @@ const Button = ({ title, onPress, disabled }) => {
 export default Button;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.button.primary.background,
+  container: (type) => ({
+    backgroundColor:
+      type === 'secondary'
+        ? colors.button.secondary.background
+        : colors.button.primary.background,
     paddingVertical: 10,
     borderRadius: 10,
-  },
-  text: {
+  }),
+  text: (type) => ({
     fontSize: 18,
     textAlign: 'center',
-    color: colors.button.primary.text,
-  },
+    color:
+      type === 'secondary'
+        ? colors.button.secondary.text
+        : colors.button.primary.text,
+  }),
   disableBg: {
     backgroundColor: colors.button.disabled.background,
     paddingVertical: 10,

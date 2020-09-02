@@ -3,13 +3,13 @@ import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Avatar } from '..';
 import { IconNext } from '../../assets';
-import { colors, isValidUrl } from '../../utils';
+import { colors, isValidImageUri } from '../../utils';
 
 const ContactItem = ({ id, firstName, lastName, photo, onPress }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.avatarWrapper}>
-        {isValidUrl(photo) ? (
+        {isValidImageUri(photo) ? (
           <Image source={{ uri: photo }} style={styles.avatar} />
         ) : (
           <Avatar />

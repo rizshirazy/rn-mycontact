@@ -110,6 +110,23 @@ class ContactDetail extends Component {
       });
   };
 
+  deleteContact = () => {
+    Axios.delete(baseUrl + '/' + this.state.id)
+      .then((res) => {
+        showSuccess(res.data.message);
+        this.props.navigation.navigate('ContactList');
+      })
+      .catch((err) => {
+        if (err.status === 500) {
+          showError('Internal Error');
+        } else if (err.status === 400) {
+          showError('Bad Request');
+        } else {
+          showError('Failed process your request');
+        }
+      });
+  };
+
   firstNameValidator = (value) => {
     const result = isValidFirstName(value);
     this.setState({
@@ -177,6 +194,12 @@ class ContactDetail extends Component {
           />
           <View>
             <Button title="Save" onPress={this.updateContact} />
+            <View style={{ height: 10 }} />
+            <Button
+              title="Delete"
+              onPress={this.deleteContact}
+              type="secondary"
+            />
           </View>
         </View>
       </ScrollView>

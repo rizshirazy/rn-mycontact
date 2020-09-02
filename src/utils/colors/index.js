@@ -26,6 +26,10 @@ export const colors = {
       background: mainColors.green1,
       text: mainColors.white,
     },
+    secondary: {
+      background: mainColors.white,
+      text: mainColors.dark1,
+    },
     disabled: {
       background: mainColors.grey3,
       text: mainColors.grey2,
